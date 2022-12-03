@@ -1,7 +1,6 @@
 'use strict';
 
 (() => {
-
   const getRandomIntInclusive = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -46,6 +45,55 @@
         alert('Компьютер ходит первым!');
       }
 
+      const playerMove = () => {
+        const playerRiddle = +prompt('Загадайте количество шариков: ');
+        if (playerRiddle < 1 || playerRiddle > balls.player) {
+          alert('Число должно быть меньше/равно вашему количеству шариков!');
+          return playerMove();
+        }
+        const random = getRandomIntInclusive(0, 1);
+        const computerAnswerIsEven = random === 0;
+
+        if (playerRiddle % 2 === 0 && computerAnswerIsEven ||
+          playerRiddle % 2 !== 0 && !computerAnswerIsEven) {
+          balls.player -= playerRiddle;
+          balls.computer += playerRiddle;
+          alert('Компьютер угадал!');
+        } else {
+          balls.player += playerRiddle;
+          balls.computer -= playerRiddle;
+          alert('Компьютер не угадал!');
+        }
+      };
+
+      const computerMove = () => {
+        const computerRiddle = getRandomIntInclusive(1, balls.computer);
+        const playerAnswerIsEven = confirm('Загаданное число четное?');
+
+        if (computerRiddle % 2 === 0 && playerAnswerIsEven ||
+          computerRiddle % 2 !== 0 && !playerAnswerIsEven) {
+          balls.player += computerRiddle;
+          balls.computer -= computerRiddle;
+          alert('Вы угадали!');
+        } else {
+          balls.player -= computerRiddle;
+          balls.computer += computerRiddle;
+          alert('Вы не угадали!');
+        }
+      };
+
+      const printBalls = () => {
+        alert(`Шариков у игрока: ${balls.player}
+        \nШариков у компьютера: ${balls.computer}`);
+      };
+
+      const isEnded = () => {
+        if (balls.player <= 0 || balls.computer <= 0) {
+          return true;
+        }
+        return false;
+      };
+
       while (!isEnded()) {
         printBalls();
 
@@ -76,54 +124,8 @@
       if (toContinue) {
         balls.player = 5;
         balls.computer = 5;
-        return start()
-      };
-
-      function playerMove() {
-        const playerRiddle = +prompt('Загадайте количество шариков: ');
-        if (playerRiddle < 1 || playerRiddle > balls.player) {
-          alert('Число должно быть меньше или равно вашему количеству шариков! (минимум 1)');
-          return playerMove();
-        }
-        const random = getRandomIntInclusive(0, 1);
-        const computerAnswerIsEven = random === 0;
-
-        if (playerRiddle % 2 === 0 && computerAnswerIsEven || playerRiddle % 2 !== 0 && !computerAnswerIsEven) {
-          balls.player -= playerRiddle;
-          balls.computer += playerRiddle;
-          alert('Компьютер угадал!');
-        } else {
-          balls.player += playerRiddle;
-          balls.computer -= playerRiddle;
-          alert('Компьютер не угадал!');
-        }
-      };
-
-      function computerMove() {
-        const computerRiddle = getRandomIntInclusive(1, balls.computer);
-        const playerAnswerIsEven = confirm('Загаданное компьютером число четное?');
-
-        if (computerRiddle % 2 === 0 && playerAnswerIsEven || computerRiddle % 2 !== 0 && !playerAnswerIsEven) {
-          balls.player += computerRiddle;
-          balls.computer -= computerRiddle;
-          alert('Вы угадали!');
-        } else {
-          balls.player -= computerRiddle;
-          balls.computer += computerRiddle;
-          alert('Вы не угадали!');
-        }
-      };
-
-      function printBalls() {
-        alert(`Шариков у игрока: ${balls.player}\nШариков у компьютера: ${balls.computer}`);
-      };
-
-      function isEnded() {
-        if (balls.player <= 0 || balls.computer <= 0) {
-          return true;
-        }
-        return false;
-      };
+        return start();
+      }
     };
   };
 
